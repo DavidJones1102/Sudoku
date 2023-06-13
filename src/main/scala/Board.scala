@@ -29,6 +29,27 @@ case class Board(array: Array[Array[Int]]){
     }
     flag
   }
+
+  def solveSudoku(row: Int, col:Int): Unit = {
+    if row >= 9 then println(this.prettyString())
+    else if col >= 9 then solveSudoku(row+1,0)
+    else if array(row)(col) > 0 then solveSudoku(row, col+1)
+    else (1 to 9).filter(value => isSafe(row,col,value)).foreach{ value =>
+      array(row)(col) = value
+      solveSudoku(row,col+1)
+      array(row)(col) = 0
+    }
+  }
+
+  def prettyString(): String = {
+    array.grouped(3).map { bigGroup =>
+      bigGroup.map { row =>
+        row.grouped(3).map { smallGroup =>
+          smallGroup.mkString(" ", " ", " ")
+        }.mkString("|", "|", "|")
+      }.mkString("\n")
+    }.mkString("+-------+-------+-------+\n", "\n+-------+-------+-------+\n", "\n+-------+-------+-------+")
+  }
 }
 
 object Board{
