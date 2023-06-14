@@ -1,9 +1,8 @@
 .button{
     -fx-pref-width: 100px;
-
 }
 
-.VBox{
-    -fx-pref-width: 50px;
-    -fx-pref-height: 50px;
-}
+
+/*.text-field{*/
+/*    -fx-border-color: rgb(226, 17, 17);*/
+/*}*/
