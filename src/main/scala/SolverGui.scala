@@ -6,7 +6,6 @@ import scalafx.scene.control.{Alert, Button, Label, TextField}
 import scalafx.scene.layout.{GridPane, Region, StackPane, VBox}
 
 object SolverGui {
-    private val boardSize = 9
     private val cellSize = 50
     private val board: Board = Board()
 
@@ -72,7 +71,7 @@ for (box <- 0 until 9){
     gridPane.add(resetButton, 1,5)
     gridPane.add(backButton, 0,0)
 
-    val scene = new Scene(500,600){
+    val scene: Scene = new Scene(500,600){
       stylesheets += getClass.getResource("solver.css").toExternalForm
     }
     gridPane.alignment = Pos.Center
@@ -89,8 +88,6 @@ for (box <- 0 until 9){
           textFieldsArray(actualRow)(actualCol).setText(text)
         }
       }
-
     }
-
   }
 

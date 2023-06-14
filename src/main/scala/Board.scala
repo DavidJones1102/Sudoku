@@ -7,6 +7,8 @@ import scalafx.scene.canvas.Canvas
 import scalafx.scene.control.{Button, Label, Menu, MenuBar, MenuItem}
 import scalafx.scene.layout.{BorderPane, GridPane, HBox, Pane, StackPane, TilePane, VBox}
 
+import scala.util.Random
+
 case class Board(array: Array[Array[Int]]){
   private def isSafe(row:Int, col:Int, num: Int): Boolean = {
      checkRow(row, num) && checkCol(col,num) && checkBox(row, col, num)
@@ -40,16 +42,12 @@ case class Board(array: Array[Array[Int]]){
     flag
   }
   def solve(row: Int, col:Int): Boolean = {
-    if (row >= 9) {
-//      println(prettyString())
-      true
-    }
+    if (row >= 9) true
     else if (col >= 9) solve(row+1, 0)
     else if (array(row)(col) > 0) solve(row,col+1)
     else {
         var flag = false
-        (1 to 9).foreach { value =>
-          if isSafe(row,col, value) then {
+        (1 to 9).foreach { value => if isSafe(row,col, value) then {
             array(row)(col) = value
             flag = solve(row,col+1)
           }
@@ -59,6 +57,8 @@ case class Board(array: Array[Array[Int]]){
       }
 
     }
+
+
   def resetBoard() = {
     (0 to 8).foreach( row => (0 to 8).foreach( col => array(row)(col) = 0))
   }
@@ -87,11 +87,13 @@ object Board{
   ))
   def apply(array: Array[Array[Int]]): Board = new Board(array)
   private def createZerosArray() = {
-    var array = Array.ofDim[Int](9, 9)
+    val array = Array.ofDim[Int](9, 9)
     for (row <- 0 until 9; col <- 0 until 9) {
       array(row)(col) = 0
     }
     array
   }
+
+
 }
 
