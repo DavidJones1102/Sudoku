@@ -14,29 +14,40 @@ object SolverGui {
     gridPane.padding = Insets(10)
     gridPane.hgap = 1
     gridPane.vgap = 1
-    private val textFieldsArray = Array.ofDim[TextField](9,9)
-    for (row <- 0 until boardSize; col <- 0 until boardSize) {
-      val textField = new TextField()
-      textFieldsArray(row)(col) = textField
-      if board.array(row)(col) > 0 then textField.setText(board.array(row)(col).toString)
 
-      textField.textProperty().addListener { (_, oldValue, newValue) =>
-          if (!newValue.matches("\\d*")) {
-            textField.setText(newValue.replaceAll("[^\\d]", ""))
-          }
-          else{
-            try{
-              board.array(row)(col) = textField.getText().toInt
-            }
-            catch{
-              case e: Exception => board.array(row)(col) = 0
-            }
-          }
+private val textFieldsArray = Array.ofDim[TextField](9, 9)
+for (box <- 0 until 9){
+  val miniGrid = new GridPane()
+  val vbox = new VBox(miniGrid)
+  vbox.getStyleClass().add("vbox")
+  for (row <- 0 until 3; col <- 0 until 3) {
+    val actualRow = row + box%3*3
+    val actualCol = col + box/3*3
+//    println(actualRow.toString +" "+actualCol.toString)
+    val textField = new TextField()
+    textFieldsArray(actualRow)(actualCol) = textField
+    if board.array(actualRow)(actualCol) > 0 then textField.setText(board.array(actualRow)(actualCol).toString)
+
+    textField.textProperty().addListener { (_, oldValue, newValue) =>
+      if (!newValue.matches("\\d*")) {
+        textField.setText(newValue.replaceAll("[^\\d]", ""))
+      }
+      else {
+        try {
+          board.array(actualRow)(actualCol) = textField.getText().toInt
         }
-      textField.prefWidth = cellSize
-      textField.prefHeight = cellSize
-      gridPane.add(textField, col, row+1)
+        catch {
+          case e: Exception => board.array(actualRow)(actualCol) = 0
+        }
+      }
     }
+    textField.prefWidth = cellSize
+    textField.prefHeight = cellSize
+    miniGrid.add(textField, col, row)
+  }
+  gridPane.add(vbox,box/3,box%3+1)
+}
+
     private val button = Button("Solve")
     button.onAction = handle{
       if(!board.checkBoardValidity()) {
@@ -57,8 +68,8 @@ object SolverGui {
     backButton.onAction = handle {
       MainMenu.start()
     }
-    gridPane.add(button, 4,11)
-    gridPane.add(resetButton, 4,12)
+    gridPane.add(button, 1,4)
+    gridPane.add(resetButton, 1,5)
     gridPane.add(backButton, 0,0)
 
     val scene = new Scene(500,600){
@@ -69,11 +80,16 @@ object SolverGui {
     scene.root = gridPane
 
     private def draw() = {
-      for(row <- 0 until 9; col <-0 until 9){
-        var text:String = ""
-        if board.array(row)(col) > 0 then text = board.array(row)(col).toString
-        textFieldsArray(row)(col).setText(text)
+      for( box <- 0 until 9){
+        for (row <- 0 until 3; col <- 0 until 3) {
+          val actualRow = row + box % 3 * 3
+          val actualCol = col + box / 3 * 3
+          var text: String = ""
+          if board.array(actualRow)(actualCol) > 0 then text = board.array(actualRow)(actualCol).toString
+          textFieldsArray(actualRow)(actualCol).setText(text)
+        }
       }
+
     }
 
   }
