@@ -2,39 +2,40 @@ import scala.annotation.tailrec
 
 object Solver extends  App {
   private val board = Array(
-    Array(0, 0, 0, 0, 7, 0, 0, 0, 0),
-    Array(0, 0, 0, 1, 9, 5, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 6, 0),
-    Array(8, 0, 0, 0, 6, 0, 0, 0, 3),
-    Array(4, 0, 0, 8, 0, 3, 0, 0, 1),
-    Array(7, 0, 0, 0, 2, 0, 0, 0, 6),
-    Array(0, 6, 0, 0, 0, 0, 2, 8, 0),
-    Array(0, 0, 0, 4, 1, 9, 0, 0, 5),
-    Array(0, 0, 0, 0, 8, 0, 0, 7, 9),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
   )
   solve(board)
 
-  def solve(board: Array[Array[Int]], row: Int = 0, col: Int = 0): Array[Array[Array[Int]]] = {
+  def solve(board: Array[Array[Int]]): Array[Array[Array[Int]]] = {
     var solutions = Array.ofDim[Int](0,9,9)
 
-    @tailrec
     def innerSolve(board: Array[Array[Int]], row: Int = 0, col: Int = 0): Unit = {
       if row >= 9 then {
-        solutions +:= board
-        println(prettyString(solutions(0)))
+        solutions +:= board.map(identity)
+        println(prettyString(board))
       }
       else if (col >= 9) innerSolve(board, row+1, 0)
       else if (board(row)(col) > 0) innerSolve(board,row, col + 1)
       else {
           (1 to 9).filter( value => isSafe(board, row, col, value)).foreach { value =>
-            board(row)(col) = value
-            solve(board, row, col+1)
-            if solutions.length <= 10 then {board(row)(col) = 0}
+            if board(row)(col) == 0 then {
+              board(row)(col) = value
+              innerSolve(board, row, col+1)
+              if solutions.length < 10 then {board(row)(col) = 0}
+            }
         }
       }
     }
-    innerSolve(board, row, col)
-//    println(solutions.length)
+    innerSolve(board)
+
     solutions
   }
 
@@ -70,20 +71,3 @@ object Solver extends  App {
     }.mkString("+-------+-------+-------+\n", "\n+-------+-------+-------+\n", "\n+-------+-------+-------+")
   }
 }
-
-//def solve(row: Int, col: Int): Boolean = {
-//    if (row >= 9) true
-//    else if (col >= 9) solve(row + 1, 0)
-//    else if (array(row)(col) > 0) solve(row, col + 1)
-//    else {
-//      var flag = false
-//      (1 to 9).foreach { value =>
-//        if isSafe(row, col, value) then {
-//          array(row)(col) = value
-//          flag = solve(row, col + 1)
-//        }
-//        if !flag then array(row)(col) = 0
-//      }
-//      flag
-//    }
-//  }
