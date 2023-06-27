@@ -1,41 +1,25 @@
 import scala.annotation.tailrec
 
-object Solver extends  App {
-  private val board = Array(
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-    Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
-  )
-  solve(board)
+object Solver {
 
   def solve(board: Array[Array[Int]]): Array[Array[Array[Int]]] = {
     var solutions = Array.ofDim[Int](0,9,9)
 
     def innerSolve(board: Array[Array[Int]], row: Int = 0, col: Int = 0): Unit = {
-      if row >= 9 then {
-        solutions +:= board.map(identity)
-        println(prettyString(board))
-      }
+      if row >= 9 then solutions+:=board.map(_.clone())
       else if (col >= 9) innerSolve(board, row+1, 0)
       else if (board(row)(col) > 0) innerSolve(board,row, col + 1)
       else {
           (1 to 9).filter( value => isSafe(board, row, col, value)).foreach { value =>
-            if board(row)(col) == 0 then {
+            if board(row)(col) == 0  && solutions.length < 10 then {
               board(row)(col) = value
               innerSolve(board, row, col+1)
-              if solutions.length < 10 then {board(row)(col) = 0}
+              board(row)(col) = 0
             }
         }
       }
     }
     innerSolve(board)
-
     solutions
   }
 
@@ -61,13 +45,4 @@ object Solver extends  App {
     !box.contains(num)
   }
 
-  def prettyString(array: Array[Array[Int]]): String = {
-    array.grouped(3).map { bigGroup =>
-      bigGroup.map { row =>
-        row.grouped(3).map { smallGroup =>
-          smallGroup.mkString(" ", " ", " ")
-        }.mkString("|", "|", "|")
-      }.mkString("\n")
-    }.mkString("+-------+-------+-------+\n", "\n+-------+-------+-------+\n", "\n+-------+-------+-------+")
-  }
 }
