@@ -1,40 +1,37 @@
-import Board.createZerosArray
+package Logic
+
+import Gui.BoardGui
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 case class Board(array: Array[Array[Int]]) {
+  private var observer: Option[BoardGui] = None
   def resetBoard(): Unit = {
     (0 to 8).foreach(row => (0 to 8).foreach(col => array(row)(col) = 0))
+    informObserver()
   }
-
-  def prettyString(): String = {
-    array.grouped(3).map { bigGroup =>
-      bigGroup.map { row =>
-        row.grouped(3).map { smallGroup =>
-          smallGroup.mkString(" ", " ", " ")
-        }.mkString("|", "|", "|")
-      }.mkString("\n")
-    }.mkString("+-------+-------+-------+\n", "\n+-------+-------+-------+\n", "\n+-------+-------+-------+")
+  def fillBoard(puzzle: Array[Array[Int]]): Unit = {
+    for( x <- 0 until 9; y <- 0 until 9)
+    {
+      array(x)(y) = puzzle(x)(y)
+    }
+    informObserver()
+  }
+  def setObserver(boardGui: BoardGui): Unit = observer = Option(boardGui)
+  private def informObserver(): Unit = {
+    observer match
+      case Some(value) => value.draw()
+      case _ =>
   }
 }
 
 object Board {
-  def apply(): Board = new Board(Array(
-    Array(5, 3, 0, 0, 7, 0, 0, 0, 0),
-    Array(6, 0, 0, 1, 9, 5, 0, 0, 0),
-    Array(0, 9, 8, 0, 0, 0, 0, 6, 0),
-    Array(8, 0, 0, 0, 6, 0, 0, 0, 3),
-    Array(4, 0, 0, 8, 0, 3, 0, 0, 1),
-    Array(7, 0, 0, 0, 2, 0, 0, 0, 6),
-    Array(0, 6, 0, 0, 0, 0, 2, 8, 0),
-    Array(0, 0, 0, 4, 1, 9, 0, 0, 5),
-    Array(0, 0, 0, 0, 8, 0, 0, 7, 9),
-  ))
+  def apply(): Board = new Board( createZerosArray() )
 
   def apply(array: Array[Array[Int]]): Board = new Board(array)
-  
+
   private def createZerosArray() = {
     val array = Array.ofDim[Int](9, 9)
     for (row <- 0 until 9; col <- 0 until 9) {

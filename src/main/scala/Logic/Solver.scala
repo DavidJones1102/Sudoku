@@ -1,7 +1,8 @@
+package Logic
+
 import scala.annotation.tailrec
 
 object Solver {
-
   def solve(board: Array[Array[Int]]): Array[Array[Array[Int]]] = {
     var solutions = Array.ofDim[Int](0,9,9)
 
