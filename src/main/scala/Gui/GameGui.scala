@@ -16,7 +16,7 @@ object GameGui {
     stylesheets += getClass.getResource("solver.css").toExternalForm
     root = new GridPane {
       private val backButton = Button("Back")
-      backButton.onAction = handle {
+      backButton.onAction = _ => {
         App.setScene(MenuGui.scene)
       }
 
@@ -29,14 +29,14 @@ object GameGui {
       footerButtonPane.alignment = Pos.Center
 
       private val newGameButton = Button("New game")
-      newGameButton.onAction = handle {
+      newGameButton.onAction = _ => {
         children.remove(gridPane)
         gridPane = newGame()
         add(gridPane, 0, 1)
       }
 
       private val checkButton = Button("Check")
-      checkButton.onAction = handle {
+      checkButton.onAction = _ => {
         if !Solver.filledBoard(board.array) then {
           new Alert(AlertType.Information, "Fill all cells").showAndWait()
         }

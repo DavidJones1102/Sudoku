@@ -21,7 +21,7 @@ object SolverGui {
       add(boardGui.getNode, 0, 1)
 
       private val backButton = Button("Back")
-      backButton.onAction = handle {
+      backButton.onAction = _ => {
         App.setScene(MenuGui.scene)
       }
 
@@ -31,14 +31,14 @@ object SolverGui {
 
 
       private val nextSolution = Button("->")
-      nextSolution.onAction = handle {
+      nextSolution.onAction = _ => {
         solutionNumber = (solutionNumber+1) % solutions.length
         board.fillBoard(solutions(solutionNumber))
       }
       nextSolution.setVisible(false);
 
       private val prevSolution = Button("<-")
-      prevSolution.onAction = handle {
+      prevSolution.onAction = _ => {
         solutionNumber = (solutionNumber - 1)
         if solutionNumber<0 then solutionNumber = solutions.length-1
         board.fillBoard(solutions(solutionNumber))
@@ -46,7 +46,7 @@ object SolverGui {
       prevSolution.setVisible(false);
 
       private val solveButton = Button("Solve")
-      solveButton.onAction = handle {
+      solveButton.onAction = _ => {
         if Solver.validBoard(board.array) then {
           solutions = Solver.solve(board.array)
           solutionNumber = 0;
@@ -60,7 +60,7 @@ object SolverGui {
       }
 
       private val resetButton = Button("Reset")
-      resetButton.onAction = handle {
+      resetButton.onAction = _ => {
         board.resetBoard()
         solutions = null
         prevSolution.setVisible(false)

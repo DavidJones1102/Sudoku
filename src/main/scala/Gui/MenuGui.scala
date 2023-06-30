@@ -12,12 +12,12 @@ object MenuGui {
     stylesheets += getClass.getResource("styles.css").toExternalForm
 
     val solverButton = new Button("Solver")
-    solverButton.onAction = handle {
+    solverButton.onAction = _ => {
       App.setScene(SolverGui.scene)
     }
 
     val newGameButton = new Button("New game")
-    newGameButton.onAction = handle {
+    newGameButton.onAction = _ => {
       App.setScene(GameGui.scene)
     }
     val menuBox = new VBox(solverButton, newGameButton)
