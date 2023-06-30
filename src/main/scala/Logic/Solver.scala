@@ -45,5 +45,19 @@ object Solver {
     } yield board(yb)(xb)
     !box.contains(num)
   }
+  def validBoard(board: Array[Array[Int]]): Boolean = {
+    var num = 0
+    var flag = true
+    for (row <- 0 until 9; col <- 0 until 9) {
+      num = board(row)(col)
+      board(row)(col) = 0
+      flag &&= num == 0 || isSafe(board, row, col, num)
+      board(row)(col) = num
+    }
+    flag
+  }
 
+  def filledBoard(board: Array[Array[Int]]): Boolean = {
+    board.count(row => row.contains(0)) == 0
+  }
 }

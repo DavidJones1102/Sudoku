@@ -40,7 +40,8 @@ object Board {
     array
   }
 
-  def generateRandomWithNEmptyCells(n: Int): Board = {
+  def generateRandomWithNEmptyCells(input: Int): Board = {
+    val n: Int = List(input, 81).min
     val diagonal: Array[Int] = Random.shuffle(1 to 9).toArray
     val arr = Array.ofDim[Int](9, 9)
     (0 until 9).foreach(value => arr(value)(value) = diagonal(value))

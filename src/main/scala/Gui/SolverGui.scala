@@ -29,26 +29,45 @@ object SolverGui {
       private val footerButtonPane = new GridPane()
       footerButtonPane.alignment = Pos.Center
 
-      private val solveButton = Button("Solve")
-      solveButton.onAction = handle {
-        solutions = Solver.solve(board.array)
-        board.fillBoard(solutions(solutionNumber))
-      }
+
       private val nextSolution = Button("->")
       nextSolution.onAction = handle {
         solutionNumber = (solutionNumber+1) % solutions.length
         board.fillBoard(solutions(solutionNumber))
       }
+      nextSolution.setVisible(false);
+
       private val prevSolution = Button("<-")
       prevSolution.onAction = handle {
         solutionNumber = (solutionNumber - 1)
         if solutionNumber<0 then solutionNumber = solutions.length-1
         board.fillBoard(solutions(solutionNumber))
       }
+      prevSolution.setVisible(false);
+
+      private val solveButton = Button("Solve")
+      solveButton.onAction = handle {
+        if Solver.validBoard(board.array) then {
+          solutions = Solver.solve(board.array)
+          solutionNumber = 0;
+          prevSolution.setVisible(solutions.length > 1)
+          nextSolution.setVisible(solutions.length > 1)
+          board.fillBoard(solutions(solutionNumber))
+        }
+        else{
+          new Alert(AlertType.Information, "Invalid board").showAndWait()
+        }
+      }
+
       private val resetButton = Button("Reset")
       resetButton.onAction = handle {
         board.resetBoard()
+        solutions = null
+        prevSolution.setVisible(false)
+        nextSolution.setVisible(false)
+        solutionNumber = 0;
       }
+
       footerButtonPane.add(prevSolution,0,0)
       footerButtonPane.add(solveButton,1,0)
       footerButtonPane.add(nextSolution,2,0)
